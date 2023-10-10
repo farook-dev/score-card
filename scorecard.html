@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            width: 80%;
+            margin: 0 auto;
+        }
+        th, td {
+            padding: 10px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #262c38;
+            color: #ffffff;
+        }
+        tr:nth-child(even) {
+        background-color: #f5f7fd;
+        }
+        h1{
+            color: #ff4000;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Leaderboard</h1>
+    <table id="leaderboard">
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+        </tr>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    fetch('Score status.csv')
+    .then(response => response.text())
+    .then(data => {
+        const rows = data.split('\n').map(row => row.split(','));
+        const leaderboard = document.getElementById('leaderboard');
+        rows.shift(); // Remove the header row
+        rows.sort((a, b) => b[1] - a[1]); // Sort by score in descending order
+
+        const top10Rows = rows.slice(0, 10);
+
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            row.forEach(cellData => {
+                const td = document.createElement('td');
+                td.textContent = cellData;
+                tr.appendChild(td);
+            });
+            leaderboard.appendChild(tr);
+        });
+
+        top10Rows.forEach(row => {
+            const tr = leaderboard.querySelector(`tr:nth-child(${top10Rows.indexOf(row) + 1})`);
+            tr.classList.add('top-10'); // Add class to top 10 rows
+        });
+    });
+});
+
+
+
+    </script>
+</body>
+</html>
